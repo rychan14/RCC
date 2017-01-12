@@ -64,45 +64,71 @@
 
 	var _koa2 = _interopRequireDefault(_koa);
 
+	var _path = __webpack_require__(4);
+
+	var _path2 = _interopRequireDefault(_path);
+
+	var _koaBodyparser = __webpack_require__(5);
+
+	var _koaBodyparser2 = _interopRequireDefault(_koaBodyparser);
+
+	var _mongodb = __webpack_require__(6);
+
+	var _mongodb2 = _interopRequireDefault(_mongodb);
+
+	var _koaSend = __webpack_require__(7);
+
+	var _koaSend2 = _interopRequireDefault(_koaSend);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; } // const express = require('koa')
-	// const path = require('path')
-	// const bodyParser = require('koa-body-parser')
-	// const mongodb = require('mongodb')
-	// const ObjectID = mongodb.ObjectID
-
-
+	var ObjectID = _mongodb2.default.ObjectID;
 	var app = new _koa2.default();
 
-	app.use(function () {
-	  var _ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee(ctx) {
-	    return regeneratorRuntime.wrap(function _callee$(_context) {
-	      while (1) {
-	        switch (_context.prev = _context.next) {
-	          case 0:
-	            ctx.body = 'hi';
+	var db = void 0;
+	_mongodb2.default.MongoClient.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017', function (err, database) {
+	  if (err) {
+	    console.log(err);
+	    process.exit(1);
+	  }
+	  db = database;
+	  console.log('database connection ready');
 
-	          case 1:
-	          case 'end':
-	            return _context.stop();
-	        }
-	      }
-	    }, _callee, undefined);
-	  }));
-
-	  return function (_x) {
-	    return _ref.apply(this, arguments);
-	  };
-	}());
-
-	app.listen(3000);
+	  var server = app.listen(process.env.PORT || 3000, function () {
+	    var port = server.address().port;
+	    console.log('running on ', port);
+	  });
+	});
 
 /***/ },
 /* 3 */
 /***/ function(module, exports) {
 
 	module.exports = require("koa");
+
+/***/ },
+/* 4 */
+/***/ function(module, exports) {
+
+	module.exports = require("path");
+
+/***/ },
+/* 5 */
+/***/ function(module, exports) {
+
+	module.exports = require("koa-bodyparser");
+
+/***/ },
+/* 6 */
+/***/ function(module, exports) {
+
+	module.exports = require("mongodb");
+
+/***/ },
+/* 7 */
+/***/ function(module, exports) {
+
+	module.exports = require("koa-send");
 
 /***/ }
 /******/ ]);

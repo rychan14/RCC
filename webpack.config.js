@@ -3,21 +3,17 @@ const fs = require('fs')
 
 let nodeModules = {}
 fs.readdirSync('node_modules')
-  .filter(function(x) {
-    return ['.bin'].indexOf(x) === -1
-  })
-  .forEach(function(mod) {
-    nodeModules[mod] = 'commonjs ' + mod
-  })
+  .filter(x => ['.bin'].indexOf(x) === -1)
+  .forEach(mod => {nodeModules[mod] = 'commonjs ' + mod})
 
 const common =
   { externals: nodeModules
   }
 
 const backend =
-  { entry: [ 'babel-polyfill', './server.js' ]
+  { entry: [ 'babel-polyfill', './backend/server.js' ]
   , output:
-    { path: path.join(__dirname, 'build')
+    { path: path.join(__dirname, 'dist/backend')
     , filename: 'server.js'
     }
   , target: 'node'
@@ -36,6 +32,24 @@ const backend =
       ]
     }
   }
+
+const frontend =
+  { entry: [ './frontend/index.js']
+  , output:
+    { path: path.join(__dirname, 'dist/frontend')
+    , filename: 'index.js'
+    }
+  , module:
+    { loaders:
+      [ { test:    /\.html$/
+        , exclude: /node_modules/
+        , loader:  'file?name=[name].[ext]'
+        }
+      ]
+    }
+  }
+
 module.exports =
   [ Object.assign({}, common, backend)
+  , Object.assign({}, common, frontend)
   ]
