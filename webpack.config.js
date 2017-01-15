@@ -36,14 +36,15 @@ const backend =
 const frontend =
   { entry: [ './frontend/index.js']
   , output:
-    { path: path.join(__dirname, 'dist/frontend')
+    { path: path.join(__dirname, 'dist/public')
+    , publicPath: 'public/'
     , filename: 'index.js'
     }
   , module:
     { loaders:
-      [ { test:    /\.html$/
+      [ { test: /\.html$/
         , exclude: /node_modules/
-        , loader:  'file?name=[name].[ext]'
+        , loader: 'file?name=[name].[ext]'
         }
       ]
     }

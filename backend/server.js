@@ -1,23 +1,26 @@
 import Koa from 'koa'
-import path from 'path'
-import bodyParser from 'koa-bodyparser'
-import mongodb from 'mongodb'
 import send from 'koa-send'
+import Router from 'koa-router'
 
-const ObjectID = mongodb.ObjectID
 const app = new Koa()
+const router = new Router()
 
-let db
-mongodb.MongoClient.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017', (err, database) => {
-  if (err) {
-    console.log(err)
-    process.exit(1)
-  }
-  db = database
-  console.log('database connection ready')
+router.get('/', async (ctx, next) =>
+  await send(ctx, 'index.html', {root: 'dist/public/'})
+)
 
-  const server = app.listen(process.env.PORT || 3000, () => {
-    const port = server.address().port
-    console.log('running on ', port)
+app
+  .use(async (ctx, next) => {
+    const start = new Date()
+    await next()
+    const ms = new Date() - start
+    console.log(`${ctx.method} ${ctx.url} - ${ms}ms, Status: ${ctx.response.status}`)
   })
+  .use(router.routes())
+  .use(async (ctx, next) => {
+    await send(ctx, ctx.path, {root: 'dist/public/'})
+  })
+
+app.listen(3000, () => {
+  console.log('listening on 3000')
 })

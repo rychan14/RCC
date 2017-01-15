@@ -34,7 +34,7 @@
 /******/ 	__webpack_require__.c = installedModules;
 
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
+/******/ 	__webpack_require__.p = "public/";
 
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
@@ -51,8 +51,7 @@
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	// Require index.html so it gets copied to dist
-	__webpack_require__(2);
+	__webpack_require__(2)
 
 
 /***/ },
