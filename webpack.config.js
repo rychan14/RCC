@@ -7,7 +7,45 @@ fs.readdirSync('node_modules')
   .forEach(mod => {nodeModules[mod] = 'commonjs ' + mod})
 
 const common =
-  { externals: nodeModules
+  { module:
+    { rules:
+      [ { test: /\.js$/
+        , exclude: '/node_modules/'
+        , use:
+          [ { loader: 'babel-loader'
+            , options:
+              { presets:
+                [ 'es2015'
+                , 'es2017'
+                ]
+              }
+            }
+          ]
+        }
+      , { test: /\.html$/
+        , exclude: /node_modules/
+        , use:
+          [ { loader: 'file-loader'
+            , options:
+              { name: '[name].[ext]'
+              }
+            }
+          ]
+        }
+      , { test: /\.css$/
+        , use:
+          [ { loader: 'style-loader' }
+          , { loader: 'css-loader'
+            , options:
+              { modules: true
+              , importLoaders: 1
+              , localIdentName: '[local]-[hash:base64:5]'
+              }
+            }
+          ]
+        }
+      ]
+    }
   }
 
 const backend =
@@ -16,37 +54,19 @@ const backend =
     { path: path.join(__dirname, 'dist/backend')
     , filename: 'server.js'
     }
+  , externals: nodeModules
   , target: 'node'
-  , module:
-    { loaders:
-      [ { test: /\.json$/
-        , loader: 'json-loader'
-        }
-      , { test: /\.js$/
-        , loader: 'babel-loader'
-        , exclude: '/node_modules/'
-        , query:
-          { presets: ['es2015', 'es2017' ]
-          }
-        }
-      ]
-    }
-  }
+ }
 
 const frontend =
-  { entry: [ './frontend/index.js']
+  { entry: ['./frontend/index.js']
   , output:
     { path: path.join(__dirname, 'dist/public')
     , publicPath: 'public/'
     , filename: 'index.js'
     }
-  , module:
-    { loaders:
-      [ { test: /\.html$/
-        , exclude: /node_modules/
-        , loader: 'file?name=[name].[ext]'
-        }
-      ]
+  , resolve:
+    { modules: [path.join(__dirname, 'frontend'), 'node_modules']
     }
   }
 
